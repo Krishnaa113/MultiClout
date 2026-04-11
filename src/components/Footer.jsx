@@ -819,7 +819,8 @@ const STYLES = `
 `;
 
 const topLinks = ['Become An Affiliate', 'End User License Agreement', 'Refund Policy', 'Disclaimer', 'Payment Transfer Terms and Conditions'];
-const company = ['About Us', 'Contact Us', 'Privacy Policy', 'Terms & Conditions'];
+const company = ['About Us', 'Contact Us', 'Privacy Policy', 'Terms & Conditions', 'Franchise'];
+
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -920,7 +921,8 @@ export default function Footer() {
                       to={
                         c === 'Terms & Conditions' ? '/terms-and-conditions' :
                           c === 'About Us' ? '/about' :
-                            c === 'Contact Us' ? '/contact' : '#'
+                            c === 'Contact Us' ? '/contact' : 
+                              c === 'Franchise' ? '/franchise' : '#'
                       }
                       className="ft-link"
                       style={{ animationDelay: `${i * 0.05}s` }}

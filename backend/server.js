@@ -286,13 +286,13 @@ app.use('/api/admin', adminRoutes);
 
 // --- SERVE FRONTEND ---
 // Serve static files from the Vite build directory
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Handle any routes that aren't API routes by serving index.html
 app.get('*', (req, res) => {
   // Check if the request is not an API call
   if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
   }
 });
 

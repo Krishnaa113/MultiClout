@@ -15,6 +15,7 @@ import Disclaimer from './pages/Disclaimer';
 import PaymentTransferTC from './pages/PaymentTransferTC';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Franchise from './pages/Franchise';
 import './App.css'
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
               <Route path="/payment-transfer-tc" element={<PaymentTransferTC />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/franchise" element={<Franchise />} />
             </Routes>
           </main>
         </div>
