@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
@@ -10,7 +11,11 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:3000',
+    process.env.FRONTEND_URL
+  ].filter(Boolean), // This removes undefined/null values
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -278,6 +283,18 @@ app.get('/api/dashboard/content', async (req, res) => {
 // Import admin routes
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
+
+// --- SERVE FRONTEND ---
+// Serve static files from the Vite build directory
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// Handle any routes that aren't API routes by serving index.html
+app.get('*', (req, res) => {
+  // Check if the request is not an API call
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
