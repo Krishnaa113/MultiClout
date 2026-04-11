@@ -63,9 +63,9 @@ export default function About() {
     <>
       <style>
         {`
-        @keyframes driftOrb {
+        @keyframes cd-bgDrift {
           0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(25px, -15px) scale(1.03); }
+          50% { transform: translate(14px, -10px) scale(1.05); }
         }
         @keyframes floatCard {
           0%, 100% { transform: translateY(0); }
@@ -85,10 +85,9 @@ export default function About() {
           position: absolute;
           border-radius: 50%;
           pointer-events: none;
-          filter: blur(40px);
         }
-        .abt-orb-1 { width: 450px; height: 450px; top: -150px; right: -100px; background: rgba(0, 184, 217, 0.08); animation: driftOrb 12s ease-in-out infinite; }
-        .abt-orb-2 { width: 350px; height: 350px; bottom: -50px; left: -100px; background: rgba(0, 184, 217, 0.05); animation: driftOrb 15s ease-in-out infinite reverse; }
+        .abt-orb-1 { width: 380px; height: 380px; top: -140px; right: -80px; background: rgba(0, 184, 217, 0.05); animation: cd-bgDrift 10s ease-in-out infinite 0s; }
+        .abt-orb-2 { width: 260px; height: 260px; bottom: -60px; left: -60px; background: rgba(0, 184, 217, 0.03); animation: cd-bgDrift 10s ease-in-out infinite 5s; }
         
         .abt-feature-card {
           background: #ffffff;
@@ -142,13 +141,15 @@ export default function About() {
           <div className="abt-bg-orb abt-orb-2" />
 
           <div className="max-w-4xl mx-auto relative z-10 px-4">
-            <div className="inline-flex items-center justify-center text-sm font-bold tracking-widest text-[#00b8d9] uppercase mb-6 bg-[#00b8d9]/10 px-5 py-2 rounded-full">
-              Building Future Leaders
+            <div className="flex items-center justify-center text-sm text-[#00b8d9] font-bold mb-4 gap-2 uppercase tracking-wide">
+              <Link to="/" className="hover:text-[#fff] transition-colors">Home</Link>
+              <span className="text-[#00b8d9]/50">/</span>
+              <span className="text-[#fff]/80">About Us</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
               India's No.1 Business <br className="hidden md:block" /> Education Network
             </h1>
-            <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
               We work as a ray of light in darkness so that you can choose the right career. Open the door to high-earning opportunities with Multiclout.
             </p>
           </div>
@@ -211,7 +212,7 @@ export default function About() {
         </section>
 
         {/* ─── Grid Features ─── */}
-        <section className="bg-white py-24 border-t border-[#f0f4f8]">
+        <section className="bg-[#fcfdfd] py-24 border-t border-[#f0f4f8]">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="text-4xl font-extrabold text-[#1e3a5f] mb-4">Master Digital Marketing</h2>
