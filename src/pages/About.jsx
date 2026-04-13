@@ -63,9 +63,9 @@ export default function About() {
     <>
       <style>
         {`
-        @keyframes cd-bgDrift {
+        @keyframes driftOrb {
           0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(14px, -10px) scale(1.05); }
+          50% { transform: translate(25px, -15px) scale(1.03); }
         }
         @keyframes floatCard {
           0%, 100% { transform: translateY(0); }
@@ -85,9 +85,10 @@ export default function About() {
           position: absolute;
           border-radius: 50%;
           pointer-events: none;
+          filter: blur(40px);
         }
-        .abt-orb-1 { width: 380px; height: 380px; top: -140px; right: -80px; background: rgba(0, 184, 217, 0.05); animation: cd-bgDrift 10s ease-in-out infinite 0s; }
-        .abt-orb-2 { width: 260px; height: 260px; bottom: -60px; left: -60px; background: rgba(0, 184, 217, 0.03); animation: cd-bgDrift 10s ease-in-out infinite 5s; }
+        .abt-orb-1 { width: 450px; height: 450px; top: -150px; right: -100px; background: rgba(0, 184, 217, 0.08); animation: driftOrb 12s ease-in-out infinite; }
+        .abt-orb-2 { width: 350px; height: 350px; bottom: -50px; left: -100px; background: rgba(0, 184, 217, 0.05); animation: driftOrb 15s ease-in-out infinite reverse; }
         
         .abt-feature-card {
           background: #ffffff;
@@ -133,28 +134,91 @@ export default function About() {
         `}
       </style>
 
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        
+        .serif { font-family: 'Playfair Display', serif; }
+
+        @keyframes xFadeUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .anim-fade-up {
+          animation: xFadeUp 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+          opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+
+        .image-mask {
+          clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        .glass-card {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-item {
+          transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .feature-item:hover {
+          transform: translateY(-10px);
+          background: #0b1628;
+          color: white;
+        }
+
+        .feature-item:hover p {
+          color: rgba(255, 255, 255, 0.5);
+        }
+        `}
+      </style>
+
       <main className="text-[#1e3a5f] bg-[#fcfdfd]">
 
         {/* ─── Hero Section ─── */}
-        <section className="abt-hero text-center text-white">
+        {/* <section className="abt-hero text-center text-white">
           <div className="abt-bg-orb abt-orb-1" />
           <div className="abt-bg-orb abt-orb-2" />
 
           <div className="max-w-4xl mx-auto relative z-10 px-4">
-            <div className="flex items-center justify-center text-sm text-[#00b8d9] font-bold mb-4 gap-2 uppercase tracking-wide">
-              <Link to="/" className="hover:text-[#fff] transition-colors">Home</Link>
-              <span className="text-[#00b8d9]/50">/</span>
-              <span className="text-[#fff]/80">About Us</span>
+            <div className="inline-flex items-center justify-center text-sm font-bold tracking-widest text-[#00b8d9] uppercase mb-6 bg-[#00b8d9]/10 px-5 py-2 rounded-full">
+              Building Future Leaders
             </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
               India's No.1 Business <br className="hidden md:block" /> Education Network
             </h1>
-            <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
               We work as a ray of light in darkness so that you can choose the right career. Open the door to high-earning opportunities with Multiclout.
             </p>
           </div>
-        </section>
+        </section> */}
+        <section className="relative overflow-hidden bg-[#0b1628] pt-40 pb-32 px-6 text-center">
+          <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-[#00b8d9]/10 blur-[150px] rounded-full" />
+          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#00b8d9]/5 blur-[120px] rounded-full" />
 
+          <div className="max-w-5xl mx-auto relative z-10 anim-fade-up">
+            <div className="inline-flex items-center px-6 py-2 rounded-full bg-white/5 border border-white/10 mb-10">
+              <span className="text-[#00b8d9] text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">
+                Legacy of Excellence
+              </span>
+            </div>
+
+            <h1 className="text-6xl md:text-[100px] font-black text-white leading-[0.85] mb-12 tracking-tighter">
+              India's No.1 <br />
+              <span className="text-transparent" style={{ WebkitTextStroke: '1px white' }}>Business Hub.</span>
+            </h1>
+
+            <p className="text-xl md:text-2xl text-white/40 max-w-2xl mx-auto leading-relaxed font-medium serif italic">
+              "We work as a ray of light in darkness so that you can choose the right career path with absolute clarity."
+            </p>
+          </div>
+        </section>
         {/* ─── Story / Narrative Section ─── */}
         <section className="py-16 md:py-24 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
           <div>
@@ -212,7 +276,7 @@ export default function About() {
         </section>
 
         {/* ─── Grid Features ─── */}
-        <section className="bg-[#fcfdfd] py-24 border-t border-[#f0f4f8]">
+        <section className="bg-white py-24 border-t border-[#f0f4f8]">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="text-4xl font-extrabold text-[#1e3a5f] mb-4">Master Digital Marketing</h2>
