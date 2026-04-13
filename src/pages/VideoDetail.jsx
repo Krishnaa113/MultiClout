@@ -517,23 +517,6 @@ const VideoDetail = () => {
                 </h1>
                 <p className="text-gray-500 text-sm">A complete masterclass on scaling your agency to six figures</p>
               </div>
-
-              {/* Author Card */}
-              <div className="flex items-center gap-4 p-4 rounded-2xl border border-white/[0.07] bg-white/[0.03]">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#00c6d7] to-[#0e7fa8] flex items-center justify-center font-bold text-[#03060D] text-sm flex-shrink-0">
-                  KK
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold flex items-center gap-1.5">
-                    {videoData.author}
-                    <CheckCircle2 size={13} className="text-[#00c6d7]" fill="currentColor" />
-                  </p>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-0.5">{videoData.date}</p>
-                </div>
-                <button className="flex-shrink-0 px-5 py-2 rounded-xl text-xs font-bold border border-[#00c6d7]/30 text-[#00c6d7] hover:bg-[#00c6d7] hover:text-[#03060D] hover:border-transparent transition-all duration-200">
-                  Follow
-                </button>
-              </div>
             </section>
 
             {/* 2. Description */}
@@ -557,107 +540,7 @@ const VideoDetail = () => {
               </div>
             </section>
 
-            {/* 3. App CTA Banner — redesigned */}
-            <section className="relative rounded-[1.75rem] overflow-hidden border border-[#00c6d7]/15">
-              {/* Background layers */}
-              <div className="absolute inset-0 bg-[#03060D]" />
-              <div className="absolute inset-0 opacity-30"
-                style={{ backgroundImage: 'radial-gradient(ellipse 80% 60% at 80% 50%, #00c6d7 0%, transparent 60%)' }} />
-              <div className="absolute inset-0 opacity-10"
-                style={{ backgroundImage: 'radial-gradient(ellipse 50% 80% at 10% 50%, #0e7fa8 0%, transparent 70%)' }} />
 
-              {/* Grid texture overlay */}
-              <div className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage: 'linear-gradient(#00c6d7 1px, transparent 1px), linear-gradient(90deg, #00c6d7 1px, transparent 1px)',
-                  backgroundSize: '40px 40px'
-                }} />
-
-              <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 p-7 md:p-10">
-                {/* Text side */}
-                <div className="flex-1 space-y-5 text-center md:text-left">
-                  <div className="inline-flex items-center gap-2 bg-[#00c6d7]/10 border border-[#00c6d7]/20 rounded-full px-3 py-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00c6d7]" style={{ boxShadow: '0 0 6px #00c6d7' }} />
-                    <span className="text-[10px] text-[#00c6d7] font-bold uppercase tracking-widest">Android App</span>
-                  </div>
-
-                  <div>
-                    <h3 className="text-2xl md:text-3xl font-black tracking-tight leading-tight mb-2">
-                      Watch offline,<br />
-                      <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(90deg, #00c6d7, #0e7fa8)' }}>
-                        anytime.
-                      </span>
-                    </h3>
-                    <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
-                      Download lessons and access exclusive content only available on our Android app.
-                    </p>
-                  </div>
-
-                  {/* Feature pills */}
-                  <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                    {['Offline downloads', 'Exclusive content', 'HD quality'].map(f => (
-                      <span key={f} className="flex items-center gap-1.5 text-[11px] text-gray-400 bg-white/[0.05] border border-white/[0.08] px-3 py-1.5 rounded-full">
-                        <CheckCircle2 size={11} className="text-[#00c6d7]" fill="currentColor" />
-                        {f}
-                      </span>
-                    ))}
-                  </div>
-
-                  <button className="inline-flex items-center gap-3 bg-[#00c6d7] text-[#03060D] px-7 py-3.5 rounded-2xl font-black text-sm hover:brightness-110 active:scale-95 transition-all duration-200 shadow-[0_0_30px_rgba(0,198,215,0.25)]">
-                    <Smartphone size={18} />
-                    Download the App
-                  </button>
-                </div>
-
-                {/* Phone visual */}
-                <div className="relative flex-shrink-0 w-40 md:w-52">
-                  {/* Glow behind phone */}
-                  <div className="absolute inset-0 rounded-full"
-                    style={{ background: 'radial-gradient(circle, rgba(0,198,215,0.2) 0%, transparent 70%)' }} />
-
-                  {/* Phone frame */}
-                  <div className="relative w-full aspect-[9/16] bg-[#080e18] rounded-[2rem] border border-white/10 overflow-hidden p-1.5 transform rotate-6 hover:rotate-3 transition-transform duration-500">
-                    {/* Screen */}
-                    <div className="w-full h-full rounded-[1.5rem] overflow-hidden bg-[#0d1520] relative">
-                      {/* Notch */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-3 bg-[#080e18] rounded-b-xl z-10" />
-
-                      {/* App UI mockup */}
-                      <div className="p-3 pt-6 space-y-2">
-                        {/* Header bar */}
-                        <div className="h-2 bg-white/10 rounded w-3/4" />
-                        <div className="h-1.5 bg-white/5 rounded w-1/2" />
-
-                        {/* Thumbnail strip */}
-                        <div className="mt-3 aspect-[16/9] bg-gradient-to-br from-[#00c6d7]/20 to-[#0e7fa8]/10 rounded-xl border border-[#00c6d7]/10 flex items-center justify-center">
-                          <Play size={20} className="text-[#00c6d7]/60" fill="currentColor" />
-                        </div>
-
-                        {/* List items */}
-                        <div className="space-y-2 pt-1">
-                          {[1, 2, 3].map(i => (
-                            <div key={i} className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-md bg-white/5 border border-white/5 flex-shrink-0" />
-                              <div className="space-y-1 flex-1">
-                                <div className="h-1.5 bg-white/10 rounded" style={{ width: `${70 - i * 10}%` }} />
-                                <div className="h-1 bg-white/5 rounded w-1/3" />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Bottom nav bar */}
-                      <div className="absolute bottom-0 left-0 right-0 h-8 bg-[#080e18]/80 border-t border-white/5 flex items-center justify-around px-3">
-                        {[1, 2, 3].map(i => (
-                          <div key={i} className={`w-4 h-4 rounded ${i === 1 ? 'bg-[#00c6d7]/40' : 'bg-white/10'}`} />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
 
             {/* 4. Related Videos Grid */}
             <section className="space-y-6">
@@ -677,7 +560,7 @@ const VideoDetail = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-5">
                 {relatedVideos.map((vid) => (
                   <Link key={vid.id} to={`/video/${vid.id}`} className="group space-y-3 block">
-                    <div className="relative aspect-[9/16] rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0d1520]">
+                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0d1520]">
                       <img
                         src={vid.thumbnail}
                         alt={vid.title}
