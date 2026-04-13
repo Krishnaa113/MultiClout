@@ -155,9 +155,10 @@ const WatchVideos = () => {
                 {section.videos.map((vid) => {
                   const progress = Math.random() > 0.5 ? Math.floor(Math.random() * 80) + 10 : 0;
                   return (
-                    <div 
+                    <Link 
                       key={vid.id} 
-                      className="relative flex-none w-[160px] sm:w-[190px] md:w-[250px] aspect-[9/16] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden group cursor-pointer snap-start bg-[#111A28] border border-white/5 shadow-lg hover:shadow-[0_15px_35px_rgba(0,198,215,0.15)] hover:border-[#00c6d7]/30 transition-all duration-500 hover:-translate-y-2"
+                      to={`/video/${vid.id}`}
+                      className="relative flex-none w-[160px] sm:w-[190px] md:w-[250px] aspect-[9/16] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden group cursor-pointer snap-start bg-[#111A28] border border-white/5 shadow-lg hover:shadow-[0_15px_35px_rgba(0,198,215,0.15)] hover:border-[#00c6d7]/30 transition-all duration-500 hover:-translate-y-2 block"
                       title={vid.title}
                     >
                       {/* Thumbnail Image */}
@@ -218,7 +219,7 @@ const WatchVideos = () => {
                            <div className="h-full bg-[#00c6d7] shadow-[0_0_10px_#00c6d7]" style={{ width: `${progress}%` }}></div>
                         </div>
                       )}
-                    </div>
+                    </Link>
                   );
                 })}
               </div>

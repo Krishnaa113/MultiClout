@@ -17,6 +17,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Franchise from './pages/Franchise';
 import WatchVideos from './pages/WatchVideos';
+import VideoDetail from './pages/VideoDetail';
 import './App.css'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/course/:id" element={<CourseDetail />} />
+              <Route path="/video/:id" element={<VideoDetail />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/eula" element={<EULA />} />
               <Route path="/refund-policy" element={<RefundPolicy />} />
