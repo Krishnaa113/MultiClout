@@ -370,6 +370,7 @@ import { useAuth } from '../hooks/useAuth.jsx';
 
 const NAV_LINKS = [
   { to: '/',           label: 'Home' },
+  { to: '/watch-videos', label: 'Watch Videos' },
   { to: '/franchise',  label: 'Franchise' },
   { to: '/categories', label: 'Training Program', isDropdown: true },
   { to: '/about',      label: 'About Us' },

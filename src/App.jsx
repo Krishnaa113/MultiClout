@@ -16,6 +16,7 @@ import PaymentTransferTC from './pages/PaymentTransferTC';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Franchise from './pages/Franchise';
+import WatchVideos from './pages/WatchVideos';
 import './App.css'
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/franchise" element={<Franchise />} />
+              <Route path="/watch-videos" element={<WatchVideos />} />
             </Routes>
           </main>
         </div>
