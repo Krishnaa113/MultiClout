@@ -71,6 +71,17 @@ app.post('/api/auth/register', [
     const { name, username, email, password, phone } = req.body;
     console.log('Extracted data:', { name, username, email, phone });
 
+    // SECURITY: Prevent admin creation through registration
+    if (email.toLowerCase().includes('admin') || 
+        username.toLowerCase().includes('admin') ||
+        name.toLowerCase().includes('admin')) {
+      console.log('SECURITY ALERT: Attempted admin creation through registration');
+      return res.status(403).json({
+        success: false,
+        message: 'Admin accounts cannot be created through registration'
+      });
+    }
+
     // Check if user exists
     const existingUser = await User.findOne({
       $or: [{ email }, { username }]
@@ -83,14 +94,14 @@ app.post('/api/auth/register', [
       });
     }
 
-    // Create user
+    // Create user - ALWAYS set as regular user
     const user = await User.create({
       name,
       username,
       email,
       password,
       phone,
-      user_type: 'user',
+      user_type: 'user', // Force to regular user
       verification_code: Math.random().toString(36).substring(2, 15)
     });
 
@@ -205,6 +216,90 @@ app.post('/api/auth/login', [
     });
   } catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
+// @desc    Create admin user (SECURE - Manual Only)
+// @route   POST /api/auth/create-admin
+// @access  Private (with secret key)
+app.post('/api/auth/create-admin', [
+  body('name').notEmpty().withMessage('Name is required'),
+  body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+  body('email').isEmail().withMessage('Please provide a valid email'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('phone').notEmpty().withMessage('Phone number is required'),
+  body('secret').notEmpty().withMessage('Admin secret key is required')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { name, username, email, password, phone, secret } = req.body;
+
+    // SECURITY: Verify secret key
+    const ADMIN_SECRET = process.env.ADMIN_SECRET || 'krishna14-admin-2024';
+    if (secret !== ADMIN_SECRET) {
+      console.log('SECURITY ALERT: Invalid admin creation attempt with wrong secret');
+      return res.status(403).json({
+        success: false,
+        message: 'Invalid admin secret key'
+      });
+    }
+
+    // Check if user exists
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }]
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'User with this email or username already exists'
+      });
+    }
+
+    // Create admin user
+    const admin = await User.create({
+      name,
+      username,
+      email,
+      password,
+      phone,
+      user_type: 'admin',
+      verification_code: Math.random().toString(36).substring(2, 15)
+    });
+
+    // Generate token
+    const token = generateToken(admin._id);
+
+    res.status(201).json({
+      success: true,
+      message: 'Admin created successfully',
+      data: {
+        token,
+        user: {
+          id: admin._id,
+          name: admin.name,
+          username: admin.username,
+          email: admin.email,
+          phone: admin.phone,
+          user_type: admin.user_type,
+          is_verified: admin.is_verified
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Admin creation error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'

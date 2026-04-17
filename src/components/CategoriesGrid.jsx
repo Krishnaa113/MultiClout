@@ -7,12 +7,12 @@ const CategoriesGrid = () => {
   
   // Default videos data
   const videos = [
-    { id: 1, category: 'Business',       title: 'Start a Business with 0 Code',  mentor: 'Ritesh Agarwal',    views: '1.2M', duration: '9:54',  img: 'photo-1556761175-b413da4baf72' },
-    { id: 2, category: 'Finance',        title: 'Top 5 Stocks for 2026',          mentor: 'Ankur Warikoo',     views: '850K', duration: '12:30', img: 'photo-1611974789855-17ffb3a7f29f' },
-    { id: 3, category: 'YouTube',        title: 'How to Get First 1000 Subs',     mentor: 'Sandeep Maheshwari',views: '2.1M', duration: '8:45',  img: 'photo-1611162617213-7d7a39e9b1d7' },
-    { id: 4, category: 'Instagram',      title: 'Viral Reel Strategy 2026',       mentor: 'Digital Pratik',    views: '920K', duration: '11:20', img: 'photo-1607082349566-187342175e2f' },
-    { id: 5, category: 'Career & Jobs',  title: 'High Paying Remote Jobs',        mentor: 'Ishan Sharma',      views: '640K', duration: '14:15', img: 'photo-1521737604893-d14cc237f11d' },
-    { id: 6, category: 'Share Market',   title: 'Options Trading Masterclass',    mentor: 'Pranjal Kamra',     views: '1.5M', duration: '18:05', img: 'photo-1590283603385-17ffb3a7f29f' },
+    { id: 1, category: 'Business',       title: 'Start a Business with 0 Code',  mentor: 'Ritesh Agarwal',    views: '1.2M', duration: '9:54',  img: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80&w=400' },
+    { id: 2, category: 'Finance',        title: 'Top 5 Stocks for 2026',          mentor: 'Ankur Warikoo',     views: '850K', duration: '12:30',  img: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=400' },
+    { id: 3, category: 'YouTube',        title: 'How to Get First 1000 Subs',     mentor: 'Sandeep Maheshwari',views: '2.1M', duration: '8:45',  img: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=400' },
+    { id: 4, category: 'Instagram',      title: 'Viral Reel Strategy 2026',       mentor: 'Digital Pratik',    views: '920K', duration: '11:20',  img: 'https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&q=80&w=400' },
+    { id: 5, category: 'Career & Jobs',  title: 'High Paying Remote Jobs',        mentor: 'Ishan Sharma',      views: '640K', duration: '14:15',  img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=400' },
+    { id: 6, category: 'Share Market',   title: 'Options Trading Masterclass',    mentor: 'Pranjal Kamra',     views: '1.5M', duration: '18:05',  img: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=400' },
   ];
 
   useEffect(() => {
@@ -571,7 +571,7 @@ const doubled = [...content.categories, ...content.categories];
                 <div className="cg-vcard-thumb">
                   <img
                     className="cg-vcard-img"
-                    src={`https://images.unsplash.com/${vid.img}?auto=format&fit=crop&q=80&w=400&h=711`}
+                    src={vid.img}
                     alt={vid.title}
                   />
                   <div className="cg-vcard-overlay" />
