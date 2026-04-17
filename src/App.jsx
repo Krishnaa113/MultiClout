@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 import CourseDetail from './pages/CourseDetail';
 import TermsAndConditions from './pages/TermsAndConditions';
 import EULA from './pages/EULA';
@@ -33,6 +34,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/course/:id" element={<CourseDetail />} />
               <Route path="/video/:id" element={<VideoDetail />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

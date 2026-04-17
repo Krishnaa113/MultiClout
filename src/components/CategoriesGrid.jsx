@@ -1,27 +1,68 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
-const categories = [
-  { name: 'Sarkari Kaam',    icon: '🏛️' },
-  { name: 'Instagram',       icon: '📸' },
-  { name: 'Business',        icon: '💼' },
-  { name: 'English Speaking',icon: '🗣️' },
-  { name: 'YouTube',         icon: '▶️' },
-  { name: 'Online Earning',  icon: '💰' },
-  { name: 'Astrology',       icon: '🔮' },
-  { name: 'Career & Jobs',   icon: '🎯' },
-  { name: 'Share Market',    icon: '📈' },
-  { name: 'Finance',         icon: '🏦' },
-  { name: 'Video Editing',   icon: '🎬' },
-];
+const CategoriesGrid = () => {
+  const [content, setContent] = useState({ title: '', categories: [] });
+  const [loading, setLoading] = useState(true);
+  
+  // Default videos data
+  const videos = [
+    { id: 1, category: 'Business',       title: 'Start a Business with 0 Code',  mentor: 'Ritesh Agarwal',    views: '1.2M', duration: '9:54',  img: 'photo-1556761175-b413da4baf72' },
+    { id: 2, category: 'Finance',        title: 'Top 5 Stocks for 2026',          mentor: 'Ankur Warikoo',     views: '850K', duration: '12:30', img: 'photo-1611974789855-17ffb3a7f29f' },
+    { id: 3, category: 'YouTube',        title: 'How to Get First 1000 Subs',     mentor: 'Sandeep Maheshwari',views: '2.1M', duration: '8:45',  img: 'photo-1611162617213-7d7a39e9b1d7' },
+    { id: 4, category: 'Instagram',      title: 'Viral Reel Strategy 2026',       mentor: 'Digital Pratik',    views: '920K', duration: '11:20', img: 'photo-1607082349566-187342175e2f' },
+    { id: 5, category: 'Career & Jobs',  title: 'High Paying Remote Jobs',        mentor: 'Ishan Sharma',      views: '640K', duration: '14:15', img: 'photo-1521737604893-d14cc237f11d' },
+    { id: 6, category: 'Share Market',   title: 'Options Trading Masterclass',    mentor: 'Pranjal Kamra',     views: '1.5M', duration: '18:05', img: 'photo-1590283603385-17ffb3a7f29f' },
+  ];
 
-const videos = [
-  { id: 1, category: 'Business',       title: 'Start a Business with 0 Code',  mentor: 'Ritesh Agarwal',    views: '1.2M', duration: '9:54',  img: 'photo-1556761175-b413da4baf72' },
-  { id: 2, category: 'Finance',        title: 'Top 5 Stocks for 2026',          mentor: 'Ankur Warikoo',     views: '850K', duration: '12:30', img: 'photo-1611974789855-9c2a0a7236a3' },
-  { id: 3, category: 'YouTube',        title: 'How to Get First 1000 Subs',     mentor: 'Sandeep Maheshwari',views: '2.1M', duration: '8:45',  img: 'photo-1611162617213-7d7a39e9b1d7' },
-  { id: 4, category: 'Instagram',      title: 'Viral Reel Strategy 2026',       mentor: 'Digital Pratik',    views: '920K', duration: '11:20', img: 'photo-1607082349566-187342175e2f' },
-  { id: 5, category: 'Career & Jobs',  title: 'High Paying Remote Jobs',        mentor: 'Ishan Sharma',      views: '640K', duration: '14:15', img: 'photo-1521737604893-d14cc237f11d' },
-  { id: 6, category: 'Share Market',   title: 'Options Trading Masterclass',    mentor: 'Pranjal Kamra',     views: '1.5M', duration: '18:05', img: 'photo-1590283603385-17ffb3a7f29f' },
-];
+  useEffect(() => {
+    fetchContent();
+  }, []);
+
+  const fetchContent = async () => {
+    try {
+      const response = await axios.get('/api/home-content/categories');
+      const apiContent = response.data.data.content;
+      
+      // Hardcoded default categories
+      const defaultCategories = [
+        { name: 'Sarkari Kaam', icon: '🏛️️', description: 'Government job preparation' },
+        { name: 'Instagram', icon: '📷', description: 'Social media marketing' },
+        { name: 'Business', icon: '💼', description: 'Business fundamentals' },
+        { name: 'English Speaking', icon: '🗣️', description: 'Improve English skills' },
+        { name: 'YouTube', icon: '📺', description: 'Content creation' },
+        { name: 'Online Earning', icon: '💰', description: 'Make money online' },
+      ];
+      
+      // Merge default categories with admin-added categories
+      const adminCategories = apiContent.categories || [];
+      const allCategories = [...defaultCategories, ...adminCategories];
+      
+      setContent({
+        title: apiContent.title || "What's waiting for you?",
+        categories: allCategories
+      });
+    } catch (error) {
+      console.error('Error fetching categories content:', error);
+      // Fallback to default content only
+      setContent({
+        title: "What's waiting for you?",
+        categories: [
+          { name: 'Sarkari Kaam', icon: '🏛️️', description: 'Government job preparation' },
+          { name: 'Instagram', icon: '📷', description: 'Social media marketing' },
+          { name: 'Business', icon: '💼', description: 'Business fundamentals' },
+          { name: 'English Speaking', icon: '🗣️', description: 'Improve English skills' },
+          { name: 'YouTube', icon: '📺', description: 'Content creation' },
+          { name: 'Online Earning', icon: '💰', description: 'Make money online' },
+        ]
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add global refresh function
+  window.refreshCategoriesContent = fetchContent;
 
 const STYLES = `
 
@@ -183,10 +224,10 @@ const STYLES = `
     box-shadow: 0 6px 20px #00b8d922;
   }
   .cg-pill.active {
-    background: #1e3a5f;
-    border-color: #1e3a5f;
+    background: #00b8d9;
+    border-color: #00b8d9;
     color: #fff;
-    box-shadow: 0 6px 20px #1e3a5f33;
+    box-shadow: 0 6px 20px #00b8d933;
   }
   .cg-pill-icon { font-size: 15px; line-height: 1; }
   .cg-pill-name {
@@ -444,15 +485,17 @@ const STYLES = `
   }
 `;
 
-const doubled = [...categories, ...categories];
-
-export default function CategoriesGrid() {
-  const [active, setActive]     = useState(null);
-  const scrollRef               = useRef(null);
+const doubled = [...content.categories, ...content.categories];
+  const [active, setActive] = useState(null);
+  const scrollRef = useRef(null);
 
   const scrollBy = (dir) => {
     scrollRef.current?.scrollBy({ left: dir * 240, behavior: 'smooth' });
   };
+
+  if (loading) {
+    return <div className="flex justify-center items-center py-20">Loading...</div>;
+  }
 
   return (
     <>
@@ -467,8 +510,10 @@ export default function CategoriesGrid() {
         {/* Heading */}
         <div className="cg-heading-wrap">
           <div className="cg-eyebrow">Explore Topics</div>
-          <h2 className="cg-heading">
-            What's waiting<br />for <span className="accent">you?</span>
+          <h2 className="cg-heading" 
+            dangerouslySetInnerHTML={{ 
+              __html: content.title || "What's waiting<br />for <span className='accent'>you?</span>" 
+            }}>
           </h2>
           <p className="cg-sub">Pick a topic and start learning from India's top mentors</p>
         </div>
@@ -567,4 +612,6 @@ export default function CategoriesGrid() {
       </section>
     </>
   );
-}
+};
+
+export default CategoriesGrid;

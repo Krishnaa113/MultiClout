@@ -12,7 +12,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: [
-    'http://localhost:5173', 
+    'http://localhost:5173',
     'http://localhost:3000',
     process.env.FRONTEND_URL
   ].filter(Boolean), // This removes undefined/null values
@@ -36,6 +36,7 @@ mongoose.connect(process.env.MONGO_URI, {
 // Import Models
 const User = require('./models/User');
 const DashboardContent = require('./models/DashboardContent');
+const HomePageContent = require('./models/HomePageContent');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -56,7 +57,7 @@ app.post('/api/auth/register', [
 ], async (req, res) => {
   try {
     console.log('Registration request received:', req.body);
-    
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log('Validation errors:', errors.array());
@@ -154,7 +155,7 @@ app.post('/api/auth/login', [
     if (user.login_attempts >= 5 && user.last_login_attempt) {
       const lockTime = 30 * 60 * 1000; // 30 minutes
       const timeSinceLastAttempt = Date.now() - user.last_login_attempt;
-      
+
       if (timeSinceLastAttempt < lockTime) {
         return res.status(423).json({
           success: false,
@@ -217,7 +218,7 @@ app.post('/api/auth/login', [
 app.get('/api/auth/me', async (req, res) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -283,6 +284,10 @@ app.get('/api/dashboard/content', async (req, res) => {
 // Import admin routes
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
+
+// Import home page content routes
+const homePageContentRoutes = require('./routes/homePageContent');
+app.use('/api/home-content', homePageContentRoutes);
 
 // --- SERVE FRONTEND ---
 // Serve static files from the Vite build directory

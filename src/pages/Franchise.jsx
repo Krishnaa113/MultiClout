@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
+import axios from 'axios';
 
 const franchiseBenefits = [
   {
@@ -42,11 +43,148 @@ const steps = [
 export default function Franchise() {
   const [formState, setFormState] = useState({ name: '', email: '', phone: '', city: '', experience: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [content, setContent] = useState({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Franchise Opportunity | Multiclout - Build Your Digital Agency";
+    fetchContent();
   }, []);
+
+  const fetchContent = async () => {
+    try {
+      const response = await axios.get('/api/home-content/franchise');
+      const apiContent = response.data.data.content;
+      
+      // Hardcoded default content
+      const defaultContent = {
+        hero: {
+          title: 'Ownership\nSimplified.',
+          subtitle: 'Join India\'s most aggressive Digital Marketing distribution network. We provide the infrastructure, you own the market.',
+          ctaText: 'Request Prospectus',
+          heroImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200'
+        },
+        benefits: [
+          {
+            title: "Global Search & Social",
+            desc: "Offer premium SEO, Meta Ads, and Performance Marketing services powered by the Multiclout global fulfillment engine.",
+            icon: "shield"
+          },
+          {
+            title: "Agency Operations",
+            desc: "Comprehensive training on running a high-ticket Digital Marketing agency, from client acquisition to retention.",
+            icon: "box"
+          },
+          {
+            title: "Recurring Revenue",
+            desc: "Built-in subscription models for Digital Marketing retainers ensuring stable, predictable monthly cash flow.",
+            icon: "dollar"
+          },
+          {
+            title: "Direct Lead Access",
+            desc: "Access to our proprietary lead generation engines that deliver verified Digital Marketing inquiries in your region.",
+            icon: "check"
+          }
+        ],
+        steps: [
+          { id: "01", title: "Apply Online", desc: "Fill out the inquiry form with your professional background and location." },
+          { id: "02", title: "Discovery Call", desc: "Our franchise consultants will reach out to discuss the opportunity and align goals." },
+          { id: "03", title: "Verification", desc: "Formal review of qualifications, financial capability, and territory availability." },
+          { id: "04", title: "Launch", desc: "Complete training, sign documents, and launch your Multiclout franchise." }
+        ],
+        investment: [
+          { tier: "Tier 3 Cities", range: "5L - 7L", focus: "Local brokerage and individual client management." },
+          { tier: "Tier 2 Cities", range: "8L - 12L", focus: "Regional hub setup with a team of up to 5 executives." },
+          { tier: "Metro Cities", range: "15L+", focus: "Full-scale corporate distribution with exclusive region rights." }
+        ],
+        testimonials: [
+          {
+            quote: "Scaling a standalone agency was a nightmare. Moving to the Multiclout ecosystem gave me the fulfillment engine I needed to finally focus purely on client relationships.",
+            author: "Rahish Kumar",
+            role: "Multiclout Partner",
+            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"
+          }
+        ],
+        faqs: [
+          { q: "Is prior marketing experience mandatory?", a: "While helpful, it is not mandatory. We look for sales DNA. Our training ecosystem covers everything from product fulfillment to CRM operations." },
+          { q: "What is the typical break-even period?", a: "Based on historical partner data, most hubs achieve operational break-even within 4 to 7 months of full-scale launch." },
+          { q: "Do you offer financing options?", a: "We have tied up with specific NBFCs to provide business loans to qualified applicants who pass our discovery phase." }
+        ]
+      };
+      
+      // Use database content if available, otherwise use default content
+      const mergedContent = {
+        hero: apiContent.hero || defaultContent.hero,
+        benefits: apiContent.benefits || defaultContent.benefits,
+        steps: apiContent.steps || defaultContent.steps,
+        investment: apiContent.investment || defaultContent.investment,
+        testimonials: apiContent.testimonials || defaultContent.testimonials,
+        faqs: apiContent.faqs || defaultContent.faqs
+      };
+      
+      setContent(mergedContent);
+    } catch (error) {
+      console.error('Error fetching franchise content:', error);
+      // Fallback to default content only
+      setContent({
+        hero: {
+          title: 'Ownership\nSimplified.',
+          subtitle: 'Join India\'s most aggressive Digital Marketing distribution network. We provide the infrastructure, you own the market.',
+          ctaText: 'Request Prospectus',
+          heroImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200'
+        },
+        benefits: [
+          {
+            title: "Global Search & Social",
+            desc: "Offer premium SEO, Meta Ads, and Performance Marketing services powered by the Multiclout global fulfillment engine.",
+            icon: "shield"
+          },
+          {
+            title: "Agency Operations",
+            desc: "Comprehensive training on running a high-ticket Digital Marketing agency, from client acquisition to retention.",
+            icon: "box"
+          },
+          {
+            title: "Recurring Revenue",
+            desc: "Built-in subscription models for Digital Marketing retainers ensuring stable, predictable monthly cash flow.",
+            icon: "dollar"
+          },
+          {
+            title: "Direct Lead Access",
+            desc: "Access to our proprietary lead generation engines that deliver verified Digital Marketing inquiries in your region.",
+            icon: "check"
+          }
+        ],
+        steps: [
+          { id: "01", title: "Apply Online", desc: "Fill out the inquiry form with your professional background and location." },
+          { id: "02", title: "Discovery Call", desc: "Our franchise consultants will reach out to discuss the opportunity and align goals." },
+          { id: "03", title: "Verification", desc: "Formal review of qualifications, financial capability, and territory availability." },
+          { id: "04", title: "Launch", desc: "Complete training, sign documents, and launch your Multiclout franchise." }
+        ],
+        investment: [
+          { tier: "Tier 3 Cities", range: "5L - 7L", focus: "Local brokerage and individual client management." },
+          { tier: "Tier 2 Cities", range: "8L - 12L", focus: "Regional hub setup with a team of up to 5 executives." },
+          { tier: "Metro Cities", range: "15L+", focus: "Full-scale corporate distribution with exclusive region rights." }
+        ],
+        testimonials: [
+          {
+            quote: "Scaling a standalone agency was a nightmare. Moving to the Multiclout ecosystem gave me the fulfillment engine I needed to finally focus purely on client relationships.",
+            author: "Rahish Kumar",
+            role: "Multiclout Partner",
+            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"
+          }
+        ],
+        faqs: [
+          { q: "Is prior marketing experience mandatory?", a: "While helpful, it is not mandatory. We look for sales DNA. Our training ecosystem covers everything from product fulfillment to CRM operations." },
+          { q: "What is the typical break-even period?", a: "Based on historical partner data, most hubs achieve operational break-even within 4 to 7 months of full-scale launch." },
+          { q: "Do you offer financing options?", a: "We have tied up with specific NBFCs to provide business loans to qualified applicants who pass our discovery phase." }
+        ]
+      });
+    }
+  };
+
+  // Expose global refresh
+  window.refreshFranchiseContent = fetchContent;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -171,16 +309,27 @@ export default function Franchise() {
                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-[#00b8d9]">Selective Partnerships Open</span>
               </div>
               <h1 className="text-5xl md:text-7xl lg:text-[110px] font-black leading-[0.9] md:leading-[0.85] tracking-tighter mb-8">
-                Ownership <br />
-                <span className="text-transparent" style={{ WebkitTextStroke: '1px #0b1628' }}>Simplified.</span>
+                {(() => {
+                  const title = content.hero?.title || 'Ownership\nSimplified.';
+                  const lines = title.split('\n');
+                  return (
+                    <>
+                      {lines[0]}
+                      <br />
+                      <span className="text-transparent" style={{ WebkitTextStroke: '1px #0b1628' }}>
+                        {lines[1] || 'Simplified.'}
+                      </span>
+                    </>
+                  );
+                })()}
               </h1>
               <p className="text-lg md:text-2xl text-gray-500 max-w-xl leading-relaxed font-medium mb-10 md:mb-12">
-                Join India's most aggressive <span className="text-[#0b1628] font-bold">Digital Marketing</span> distribution network. We provide the infrastructure, you own the market.
+                {content.hero?.subtitle}
               </p>
 
               <div className="flex flex-wrap gap-6 md:gap-8 items-center">
                 <a href="#apply" className="px-8 md:px-12 py-4 md:py-6 bg-[#0b1628] text-white font-black rounded-full hover:bg-[#00b8d9] hover:text-[#0b1628] transition-all transform hover:-rotate-2 text-sm md:text-base">
-                  Request Prospectus
+                  {content.hero?.ctaText}
                 </a>
                 <div className="flex -space-x-3">
                   {[1, 2, 3, 4].map(i => (
@@ -195,7 +344,7 @@ export default function Franchise() {
 
             <div className="lg:col-span-5 relative anim-scale-in delay-1 mt-12 lg:mt-0">
               <div className="hero-img-mask overflow-hidden rounded-[40px] shadow-3xl bg-gray-100 aspect-[4/3] lg:aspect-square">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200" alt="Office" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
+                <img src={content.hero?.heroImage || "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"} alt="Office" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
               </div>
               <div className="absolute -bottom-6 md:-bottom-10 left-4 md:-left-10 bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl border border-gray-100 anim-fade-up delay-2">
                 <div className="text-2xl md:text-4xl font-black text-[#0b1628]">₹8.4L+</div>
@@ -246,10 +395,24 @@ export default function Franchise() {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-1">
-              {franchiseBenefits.map((benefit, idx) => (
+              {content.benefits?.map((benefit, idx) => (
                 <div key={idx} className="p-8 md:p-12 border border-gray-100 hover:bg-gray-50 transition-colors group">
                   <div className="text-[#00b8d9] mb-6 md:mb-8 transform group-hover:-translate-y-2 transition-transform">
-                    {benefit.icon}
+                    {benefit.icon === 'shield' && (
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                    )}
+                    {benefit.icon === 'box' && (
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>
+                    )}
+                    {benefit.icon === 'dollar' && (
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                    )}
+                    {benefit.icon === 'check' && (
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                    )}
+                    {!['shield', 'box', 'dollar', 'check'].includes(benefit.icon) && (
+                      <span className="text-2xl">{benefit.icon}</span>
+                    )}
                   </div>
                   <h3 className="text-lg md:text-xl font-black mb-4">{benefit.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{benefit.desc}</p>
@@ -269,7 +432,7 @@ export default function Franchise() {
 
             <div className="grid md:grid-cols-4 gap-6 md:gap-8 relative">
               <div className="absolute top-1/2 left-0 w-full h-px bg-white/5 hidden md:block" />
-              {steps.map((step, idx) => (
+              {content.steps?.map((step, idx) => (
                 <div key={idx} className="relative z-10 bg-[#0b1628] p-6 md:p-8 border border-white/10 rounded-2xl md:rounded-3xl group hover:border-[#00b8d9] transition-all anim-fade-up">
                   <div className="text-5xl md:text-7xl font-black text-white/5 mb-6 md:mb-8 group-hover:text-[#00b8d9]/20 transition-all font-serif">{step.id}</div>
                   <h3 className="text-lg md:text-xl font-black mb-4">{step.title}</h3>
@@ -284,15 +447,15 @@ export default function Franchise() {
         <section className="py-20 md:py-40 bg-white">
           <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 md:gap-24 items-center">
             <div className="rounded-[40px] md:rounded-[80px] overflow-hidden shadow-3xl anim-scale-in bg-gray-100 h-[400px] md:h-[600px]">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" alt="Partner" className="w-full h-full object-cover" />
+              <img src={content.testimonials?.[0]?.image || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"} alt="Partner" className="w-full h-full object-cover" />
             </div>
             <div className="anim-fade-up">
               <div className="serif text-3xl md:text-4xl lg:text-5xl border-l-4 border-[#00b8d9] pl-6 md:pl-12 mb-8 md:mb-12 italic leading-tight">
-                "Scaling a standalone agency was a nightmare. Moving to the Multiclout ecosystem gave me the fulfillment engine I needed to finally focus purely on client relationships."
+                "{content.testimonials?.[0]?.quote || "Scaling a standalone agency was a nightmare. Moving to the Multiclout ecosystem gave me the fulfillment engine I needed to finally focus purely on client relationships."}"
               </div>
               <div className="pl-6 md:pl-12">
-                <h4 className="text-xl md:text-2xl font-black">Rahish Kumar</h4>
-                <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px] md:text-xs">Multiclout Partner</p>
+                <h4 className="text-xl md:text-2xl font-black">{content.testimonials?.[0]?.author || "Rahish Kumar"}</h4>
+                <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px] md:text-xs">{content.testimonials?.[0]?.role || "Multiclout Partner"}</p>
               </div>
             </div>
           </div>
@@ -306,14 +469,10 @@ export default function Franchise() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-              {[
-                { tier: "Tier 3 Cities", range: "₹5L - ₹7L", focus: "Local brokerage and individual client management." },
-                { tier: "Tier 2 Cities", range: "₹8L - ₹12L", focus: "Regional hub setup with a team of up to 5 executives." },
-                { tier: "Metro Cities", range: "₹15L+", focus: "Full-scale corporate distribution with exclusive region rights." }
-              ].map((item, idx) => (
+              {content.investment?.map((item, idx) => (
                 <div key={idx} className="bg-white p-8 md:p-12 rounded-[30px] md:rounded-[40px] shadow-sm hover:shadow-xl transition-all group border border-gray-100">
                   <h4 className="text-[10px] md:text-xs font-black uppercase tracking-widest text-gray-400 mb-4">{item.tier}</h4>
-                  <div className="text-3xl md:text-4xl font-black mb-6 md:mb-8 group-hover:text-[#00b8d9] transition-colors">{item.range}</div>
+                  <div className="text-3xl md:text-4xl font-black mb-6 md:mb-8 group-hover:text-[#00b8d9] transition-colors">{'\u20B9' + item.range}</div>
                   <p className="text-gray-500 text-sm leading-relaxed">{item.focus}</p>
                 </div>
               ))}
@@ -329,11 +488,7 @@ export default function Franchise() {
             </div>
 
             <div className="space-y-8 md:space-y-12">
-              {[
-                { q: "Is prior marketing experience mandatory?", a: "While helpful, it is not mandatory. We look for sales DNA. Our training ecosystem covers everything from product fulfillment to CRM operations." },
-                { q: "What is the typical break-even period?", a: "Based on historical partner data, most hubs achieve operational break-even within 4 to 7 months of full-scale launch." },
-                { q: "Do you offer financing options?", a: "We have tied up with specific NBFCs to provide business loans to qualified applicants who pass our discovery phase." }
-              ].map((faq, idx) => (
+              {content.faqs?.map((faq, idx) => (
                 <div key={idx} className="anim-fade-up border-b border-gray-100 pb-8 md:pb-12 last:border-0">
                   <h4 className="text-lg md:text-xl font-black mb-4 flex gap-4">
                     <span className="text-[#00b8d9]">0{idx + 1}</span>

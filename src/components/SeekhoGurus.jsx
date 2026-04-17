@@ -1,57 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-const gurus = [
-  {
-    id: 1,
-    name: 'Tejas Morya',
-    label: 'Share Market Guru',
-    videos: '85',
-    views: '229K',
-    avatar: 'https://i.pravatar.cc/150?img=11',
-  },
-  {
-    id: 2,
-    name: 'Vikas Sharma',
-    label: 'Share Market Guru',
-    videos: '317',
-    views: '1.1M',
-    avatar: 'https://i.pravatar.cc/150?img=52',
-  },
-  {
-    id: 3,
-    name: 'Kartik Dhiman',
-    label: 'Business Guru',
-    videos: '97',
-    views: '621K',
-    avatar: 'https://i.pravatar.cc/150?img=33',
-  },
-  {
-    id: 4,
-    name: 'Rahul Jadhav',
-    label: 'Share Market Guru',
-    videos: '120',
-    views: '357K',
-    avatar: 'https://i.pravatar.cc/150?img=60',
-  },
-  {
-    id: 5,
-    name: 'Pou Daman Handa',
-    label: 'Culinary Guru',
-    videos: '74',
-    views: '329K',
-    avatar: 'https://i.pravatar.cc/150?img=14',
-  },
-  {
-    id: 6,
-    name: 'Faiz Alam',
-    label: 'Coding Guru',
-    videos: '210',
-    views: '4.5M',
-    avatar: 'https://i.pravatar.cc/150?img=57',
-  },
-];
-
-const N = gurus.length;
+import axios from 'axios';
 
 const STYLES = `
 @keyframes floatUp {
@@ -149,7 +97,7 @@ const STYLES = `
   left: 50%;
   top: 50%;
   transition: transform 0.5s cubic-bezier(0.4,0,0.2,1),
-              opacity  0.5s ease,
+              opacity 0.5s ease,
               width    0.5s ease;
 }
 
@@ -204,7 +152,7 @@ const STYLES = `
 
 .sg-avatar {
   display: block;
-  border-radius: 50% 50% 0 0;
+  border-radius: 50% 50% 0;
   object-fit: cover;
   object-position: top;
   position: relative;
@@ -367,12 +315,6 @@ const STYLES = `
 }
 `;
 
-function getOffset(i, active) {
-  let off = ((i - active) % N + N) % N;
-  if (off > N / 2) off -= N;
-  return off;
-}
-
 const PARTICLES = [
   { size: 8,  top: '18%', left: '8%',  delay: '0s',   dur: '3.2s' },
   { size: 6,  top: '72%', left: '5%',  delay: '0.8s', dur: '4s'   },
@@ -382,24 +324,30 @@ const PARTICLES = [
   { size: 6,  top: '12%', left: '78%', delay: '0.5s', dur: '3.8s' },
 ];
 
-function GuruCard({ guru, offset, onClick, style }) {
+function getOffset(i, active, total) {
+  let off = ((i - active) % total + total) % total;
+  if (off > total / 2) off -= total;
+  return off;
+}
+
+function GuruCard({ guru, offset, total, onClick, style }) {
   const isCenter = offset === 0;
   const absOff   = Math.abs(offset);
 
   if (absOff > 2) return null;
 
-  const scale   = isCenter ? 1.14 : absOff === 1 ? 0.87 : 0.70;
-  const tx      = offset * (absOff === 0 ? 0 : 275);
-  const ty      = absOff === 1 ? 40 : absOff === 2 ? 72 : 0;
-  const zIndex  = isCenter ? 10 : absOff === 1 ? 6 : 2;
-  const opacity = absOff === 2 ? 0.42 : 1;
-  const width   = isCenter ? 300 : 238;
-  const avatarH = isCenter ? 152 : 110;
-  const topH    = isCenter ? 168 : 124;
-  const nameSz  = isCenter ? 20 : 14;
-  const statSz  = isCenter ? 12 : 10;
-  const iconSz  = isCenter ? 36 : 27;
-  const badgeSz = isCenter ? 12 : 10;
+  const scale    = isCenter ? 1.14 : absOff === 1 ? 0.87 : 0.70;
+  const tx       = offset * (absOff === 0 ? 0 : 275);
+  const ty       = absOff === 1 ? 40 : absOff === 2 ? 72 : 0;
+  const zIndex   = isCenter ? 10 : absOff === 1 ? 6 : 2;
+  const opacity  = absOff === 2 ? 0.42 : 1;
+  const width    = isCenter ? 300 : 238;
+  const avatarH  = isCenter ? 152 : 110;
+  const topH     = isCenter ? 168 : 124;
+  const nameSz   = isCenter ? 20 : 14;
+  const statSz   = isCenter ? 12 : 10;
+  const iconSz   = isCenter ? 36 : 27;
+  const badgeSz  = isCenter ? 12 : 10;
   const badgePad = isCenter ? '5px 18px' : '4px 12px';
 
   const orbitSize = 220;
@@ -510,7 +458,9 @@ function GuruCard({ guru, offset, onClick, style }) {
   );
 }
 
-export default function SeekhoGurus() {
+// Inner carousel component (renamed to avoid conflict)
+function SeekhoGurusCarousel({ gurus, content }) {
+  const N = gurus.length;
   const [activeIdx, setActiveIdx] = useState(0);
   const [key, setKey]             = useState(0);
   const [isMobile, setIsMobile]   = useState(window.innerWidth < 768);
@@ -540,7 +490,7 @@ export default function SeekhoGurus() {
     resetTimer();
   };
 
-  const positions = gurus.map((_, i) => getOffset(i, activeIdx));
+  const positions = gurus.map((_, i) => getOffset(i, activeIdx, N));
 
   return (
     <>
@@ -575,26 +525,27 @@ export default function SeekhoGurus() {
           />
         ))}
 
-        <h2 className="sg-heading">MultiClout Gurus</h2>
-        <p className="sg-sub">Learn from the best</p>
+        <h2 className="sg-heading">{content.title || 'MultiClout Gurus'}</h2>
+        <p className="sg-sub">{content.subtitle || 'Learn from the best'}</p>
 
         <div className="sg-carousel">
           {gurus.map((guru, i) => {
-            const offset = positions[i];
+            const offset  = positions[i];
             const isCenter = offset === 0;
-            const absOff   = Math.abs(offset);
-            
-            // mobile logic: reduce width and spacing
-            let txMultiplier = isMobile ? 120 : 275;
-            let txScale      = isMobile ? (isCenter ? 1 : 0.7) : (isCenter ? 1.14 : absOff === 1 ? 0.87 : 0.7);
+            const absOff  = Math.abs(offset);
+
+            const txMultiplier = isMobile ? 120 : 275;
+            const txScale      = isMobile
+              ? (isCenter ? 1 : 0.7)
+              : (isCenter ? 1.14 : absOff === 1 ? 0.87 : 0.7);
 
             return (
               <GuruCard
                 key={`${guru.id}-${i === activeIdx ? key : 0}`}
                 guru={guru}
                 offset={offset}
+                total={N}
                 onClick={() => positions[i] !== 0 && go(i)}
-                // we override styles for mobile inside GuruCard or here
                 style={{
                   width: isMobile ? (isCenter ? 240 : 180) : undefined,
                   transform: `translate(-50%,-50%) translateX(${offset * txMultiplier}px) translateY(${absOff === 1 ? 40 : absOff === 2 ? 72 : 0}px) scale(${txScale})`,
@@ -627,4 +578,154 @@ export default function SeekhoGurus() {
       </section>
     </>
   );
+}
+
+// Outer data-fetching wrapper — default export
+export default function SeekhoGurus() {
+  const [content, setContent] = useState({ title: '', subtitle: '', gurus: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchContent();
+  }, []);
+
+  const fetchContent = async () => {
+    try {
+      const response = await axios.get('/api/home-content/seekho_gurus');
+      const apiContent = response.data.data.content;
+      
+      // Hardcoded default gurus
+      const defaultGurus = [
+        {
+          id: 1,
+          name: 'Tejas Morya',
+          label: 'Share Market Guru',
+          videos: '85',
+          views: '229K',
+          avatar: 'https://i.pravatar.cc/150?img=11',
+        },
+        {
+          id: 2,
+          name: 'Vikas Sharma',
+          label: 'Share Market Guru',
+          videos: '317',
+          views: '1.1M',
+          avatar: 'https://i.pravatar.cc/150?img=52',
+        },
+        {
+          id: 3,
+          name: 'Kartik Dhiman',
+          label: 'Business Guru',
+          videos: '97',
+          views: '621K',
+          avatar: 'https://i.pravatar.cc/150?img=33',
+        },
+        {
+          id: 4,
+          name: 'Rahul Jadhav',
+          label: 'Share Market Guru',
+          videos: '120',
+          views: '357K',
+          avatar: 'https://i.pravatar.cc/150?img=60',
+        },
+        {
+          id: 5,
+          name: 'Pou Daman Handa',
+          label: 'Culinary Guru',
+          videos: '74',
+          views: '329K',
+          avatar: 'https://i.pravatar.cc/150?img=14',
+        },
+        {
+          id: 6,
+          name: 'Faiz Alam',
+          label: 'Coding Guru',
+          videos: '210',
+          views: '4.5M',
+          avatar: 'https://i.pravatar.cc/150?img=57',
+        },
+      ];
+      
+      // Merge default gurus with admin-added gurus
+      const adminGurus = apiContent.gurus || [];
+      const allGurus = [...defaultGurus, ...adminGurus.map((guru, index) => ({
+        ...guru,
+        id: guru.id || (defaultGurus.length + index + 1) // Ensure unique IDs
+      }))];
+      
+      setContent({
+        title: apiContent.title || "Learn from the best",
+        subtitle: apiContent.subtitle || "Our expert instructors bring years of industry experience and are passionate about sharing their knowledge with you.",
+        gurus: allGurus
+      });
+    } catch (error) {
+      console.error('Error fetching seekho gurus content:', error);
+      // Fallback to default content only
+      setContent({
+        title: "Learn from the best",
+        subtitle: "Our expert instructors bring years of industry experience and are passionate about sharing their knowledge with you.",
+        gurus: [
+          {
+            id: 1,
+            name: 'Tejas Morya',
+            label: 'Share Market Guru',
+            videos: '85',
+            views: '229K',
+            avatar: 'https://i.pravatar.cc/150?img=11',
+          },
+          {
+            id: 2,
+            name: 'Vikas Sharma',
+            label: 'Share Market Guru',
+            videos: '317',
+            views: '1.1M',
+            avatar: 'https://i.pravatar.cc/150?img=52',
+          },
+          {
+            id: 3,
+            name: 'Kartik Dhiman',
+            label: 'Business Guru',
+            videos: '97',
+            views: '621K',
+            avatar: 'https://i.pravatar.cc/150?img=33',
+          },
+          {
+            id: 4,
+            name: 'Rahul Jadhav',
+            label: 'Share Market Guru',
+            videos: '120',
+            views: '357K',
+            avatar: 'https://i.pravatar.cc/150?img=60',
+          },
+          {
+            id: 5,
+            name: 'Pou Daman Handa',
+            label: 'Culinary Guru',
+            videos: '74',
+            views: '329K',
+            avatar: 'https://i.pravatar.cc/150?img=14',
+          },
+          {
+            id: 6,
+            name: 'Faiz Alam',
+            label: 'Coding Guru',
+            videos: '210',
+            views: '4.5M',
+            avatar: 'https://i.pravatar.cc/150?img=57',
+          },
+        ]
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Expose global refresh
+  window.refreshSeekhoGurusContent = fetchContent;
+
+  if (loading) {
+    return <div className="flex justify-center items-center py-20">Loading...</div>;
+  }
+
+  return <SeekhoGurusCarousel gurus={content.gurus} content={content} />;
 }
