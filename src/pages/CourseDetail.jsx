@@ -1,14 +1,140 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, Check, PlayCircle, Monitor, FileText, Download, Infinity, Trophy, ChevronRight, Globe, AlertCircle, Share2 } from 'lucide-react';
+import axios from 'axios';
 import Footer from '../components/Footer';
 
 export default function CourseDetail() {
   const { id } = useParams();
+  const [courseData, setCourseData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    fetchCourseData();
+  }, [id]);
+
+  const fetchCourseData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/course-detail/${id}`);
+      setCourseData(response.data.data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching course data:', err);
+      setError('Failed to load course content');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Default fallback data
+  const defaultData = {
+    hero: {
+      title: "Marketing Mastery: The Complete Guide 2026",
+      subtitle: "Learn advanced marketing strategies, branding techniques, and how to scale your business exponentially with proven step-by-step methods.",
+      description: "Welcome to Marketing Mastery, the most comprehensive and up-to-date marketing course on the internet.",
+      badge: "Bestseller",
+      rating: 4.8,
+      ratingsCount: "12,450",
+      studentsCount: "64,892",
+      instructor: "Multiclout Master",
+      lastUpdated: "11/2025",
+      language: "English",
+      previewImage: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+    },
+    pricing: {
+      currentPrice: "₹2,550",
+      originalPrice: "₹8,999",
+      discountText: "71% off! Limited time offer",
+      guaranteeText: "30-Day Money-Back Guarantee"
+    },
+    learningPoints: [
+      "Build an advanced marketing funnel from scratch",
+      "Master brand positioning & storytelling",
+      "Generate high-converting organic traffic",
+      "Optimize paid ad campaigns on Meta & Google",
+      "Understand consumer psychology and buying behavior",
+      "Automate your sales processes for passive growth"
+    ],
+    courseContent: {
+      totalSections: "15",
+      totalLectures: "142",
+      totalLength: "22h 15m",
+      sections: [
+        {
+          title: "M1: Introduction to Marketing",
+          lectures: "5",
+          duration: "45 min",
+          isExpanded: true,
+          lectureItems: [
+            { type: "video", title: "Welcome to the Course", duration: "03:12", isPreview: true },
+            { type: "video", title: "Understanding the Modern Consumer", duration: "12:45" },
+            { type: "article", title: "Worksheet: Goal Setting", duration: "2 pages" }
+          ]
+        },
+        {
+          title: "M2: Advanced Branding Strategies",
+          lectures: "12",
+          duration: "2h 10m",
+          isExpanded: false,
+          lectureItems: []
+        },
+        {
+          title: "M3: Social Media Domination",
+          lectures: "18",
+          duration: "3h 45m",
+          isExpanded: false,
+          lectureItems: []
+        }
+      ]
+    },
+    requirements: [
+      "No prior marketing or business experience required.",
+      "A computer or smartphone with an internet connection.",
+      "A willingness to learn and apply the strategies discussed."
+    ],
+    description: "Welcome to Marketing Mastery, the most comprehensive and up-to-date marketing course on the internet. Are you struggling to get eyes on your business? Do you feel like you have a great product but nobody knows about it? In this course, we will break down the exact strategies used by multi-million dollar corporations and apply them to your business.",
+    courseIncludes: {
+      videoHours: "22.5",
+      articles: "14",
+      downloadableResources: "84",
+      accessOnDevices: true,
+      lifetimeAccess: true,
+      certificate: true
+    }
+  };
+
+  const data = courseData || defaultData;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#fff] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00b8d9] mx-auto mb-4"></div>
+          <p className="text-[#1e3a5f]">Loading course content...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#fff] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <p className="text-[#1e3a5f] mb-4">{error}</p>
+          <button 
+            onClick={fetchCourseData}
+            className="bg-[#00b8d9] text-white px-6 py-2 rounded-lg hover:bg-[#1e3a5f] transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -42,36 +168,36 @@ export default function CourseDetail() {
             </div>
 
             <h1 className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight tracking-tight text-[#fff]">
-              Marketing Mastery: The Complete Guide 2026
+              {data.hero.title}
             </h1>
             <p className="text-lg md:text-xl text-[#fff]/80 mb-6 max-w-3xl">
-              Learn advanced marketing strategies, branding techniques, and how to scale your business exponentially with proven step-by-step methods.
+              {data.hero.subtitle}
             </p>
 
             <div className="flex flex-wrap items-center gap-2 mb-4 text-sm md:text-base">
               <span className="bg-[#00b8d9] text-[#fff] font-bold px-2 py-1 rounded text-xs uppercase tracking-wider">
-                Bestseller
+                {data.hero.badge}
               </span>
               <span className="text-[#00b8d9] font-bold flex items-center gap-1 ml-2">
-                4.8 <Star size={16} fill="#00b8d9" stroke="none" />
+                {data.hero.rating} <Star size={16} fill="#00b8d9" stroke="none" />
                 <Star size={16} fill="#00b8d9" stroke="none" />
                 <Star size={16} fill="#00b8d9" stroke="none" />
                 <Star size={16} fill="#00b8d9" stroke="none" />
                 <Star size={16} fill="#00b8d9" stroke="none" />
               </span>
               <a href="#reviews" className="text-[#00b8d9] hover:text-[#fff] hover:underline underline-offset-2 ml-1">
-                (12,450 ratings)
+                ({data.hero.ratingsCount} ratings)
               </a>
-              <span className="text-[#fff]/70 ml-2">64,892 students</span>
+              <span className="text-[#fff]/70 ml-2">{data.hero.studentsCount} students</span>
             </div>
 
             <div className="text-sm mb-4 text-[#fff]/70">
-              Created by <a href="#" className="text-[#00b8d9] hover:underline font-bold">Multiclout Master</a>
+              Created by <a href="#" className="text-[#00b8d9] hover:underline font-bold">{data.hero.instructor}</a>
             </div>
 
             <div className="flex flex-wrap items-center gap-6 text-sm text-[#fff]/80">
-              <div className="flex items-center gap-2"><AlertCircle size={16} /> Last updated 11/2025</div>
-              <div className="flex items-center gap-2"><Globe size={16} /> English</div>
+              <div className="flex items-center gap-2"><AlertCircle size={16} /> Last updated {data.hero.lastUpdated}</div>
+              <div className="flex items-center gap-2"><Globe size={16} /> {data.hero.language}</div>
             </div>
           </div>
         </div>
@@ -88,7 +214,7 @@ export default function CourseDetail() {
             <div className="lg:hidden bg-[#fff] rounded-2xl overflow-hidden border border-[#1e3a5f]/10 shadow-md mb-2">
               <div className="relative border-b-[3px] border-[#00b8d9]">
                 <img 
-                  src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                  src={data.hero.previewImage} 
                   alt="Course Preview" 
                   className="w-full h-[200px] object-cover"
                 />
@@ -100,17 +226,17 @@ export default function CourseDetail() {
               </div>
               <div className="p-6">
                 <div className="text-3xl font-extrabold text-[#1e3a5f] mb-1 flex items-end gap-3">
-                  ₹2,550
-                  <span className="text-[#1e3a5f]/40 font-medium text-base line-through mb-1">₹8,999</span>
+                  {data.pricing.currentPrice}
+                  <span className="text-[#1e3a5f]/40 font-medium text-base line-through mb-1">{data.pricing.originalPrice}</span>
                 </div>
                 <div className="text-[#00b8d9] font-bold text-[13px] mb-5 flex items-center gap-1.5">
-                  <AlertCircle size={14} /> 71% off! Limited time offer
+                  <AlertCircle size={14} /> {data.pricing.discountText}
                 </div>
                 <button className="w-full bg-[#1e3a5f] hover:bg-[#00b8d9] text-[#fff] font-bold py-3.5 rounded-xl mb-3 shadow-lg transition-colors">
                   Add to cart
                 </button>
                 <div className="text-center text-[11px] font-bold text-[#1e3a5f]/40 uppercase tracking-tighter">
-                  30-Day Money-Back Guarantee • Full Lifetime Access
+                  {data.pricing.guaranteeText} • Full Lifetime Access
                 </div>
               </div>
             </div>
@@ -119,30 +245,12 @@ export default function CourseDetail() {
             <div className="border border-[#1e3a5f]/10 p-6 md:p-8 rounded-2xl bg-[#00b8d9]/[0.02]">
               <h2 className="text-2xl font-extrabold mb-6 text-[#1e3a5f]">What you'll learn</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm md:text-base text-[#1e3a5f]/80">
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 bg-[#00b8d9]/10 p-1 rounded-full"><Check size={16} className="text-[#00b8d9] flex-shrink-0" strokeWidth={3} /></div>
-                  <span className="leading-relaxed">Build an advanced marketing funnel from scratch</span>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 bg-[#00b8d9]/10 p-1 rounded-full"><Check size={16} className="text-[#00b8d9] flex-shrink-0" strokeWidth={3} /></div>
-                  <span className="leading-relaxed">Master brand positioning & storytelling</span>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 bg-[#00b8d9]/10 p-1 rounded-full"><Check size={16} className="text-[#00b8d9] flex-shrink-0" strokeWidth={3} /></div>
-                  <span className="leading-relaxed">Generate high-converting organic traffic</span>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 bg-[#00b8d9]/10 p-1 rounded-full"><Check size={16} className="text-[#00b8d9] flex-shrink-0" strokeWidth={3} /></div>
-                  <span className="leading-relaxed">Optimize paid ad campaigns on Meta & Google</span>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 bg-[#00b8d9]/10 p-1 rounded-full"><Check size={16} className="text-[#00b8d9] flex-shrink-0" strokeWidth={3} /></div>
-                  <span className="leading-relaxed">Understand consumer psychology and buying behavior</span>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 bg-[#00b8d9]/10 p-1 rounded-full"><Check size={16} className="text-[#00b8d9] flex-shrink-0" strokeWidth={3} /></div>
-                  <span className="leading-relaxed">Automate your sales processes for passive growth</span>
-                </div>
+                {data.learningPoints.map((point, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="mt-0.5 bg-[#00b8d9]/10 p-1 rounded-full"><Check size={16} className="text-[#00b8d9] flex-shrink-0" strokeWidth={3} /></div>
+                    <span className="leading-relaxed">{point}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -150,58 +258,46 @@ export default function CourseDetail() {
             <div>
               <h2 className="text-2xl font-extrabold mb-4 text-[#1e3a5f]">Course content</h2>
               <div className="flex justify-between items-center text-sm mb-4 text-[#1e3a5f]/60">
-                <span>15 sections • 142 lectures • 22h 15m total length</span>
+                <span>{data.courseContent.totalSections} sections • {data.courseContent.totalLectures} lectures • {data.courseContent.totalLength} total length</span>
                 <button className="text-[#00b8d9] font-bold hover:text-[#1e3a5f] transition-colors">Expand all sections</button>
               </div>
               
               <div className="border border-[#1e3a5f]/10 rounded-xl overflow-hidden shadow-sm">
-                {/* Accordion Item 1 */}
-                <div className="bg-[#1e3a5f]/[0.03] border-b border-[#1e3a5f]/10 p-4 flex justify-between items-center cursor-pointer hover:bg-[#1e3a5f]/[0.06] transition-colors">
-                  <div className="flex items-center gap-3 font-bold text-lg text-[#1e3a5f]">
-                    <span>M1: Introduction to Marketing</span>
-                  </div>
-                  <span className="text-sm text-[#1e3a5f]/60">5 lectures • 45 min</span>
-                </div>
-                <div className="bg-[#fff] p-4 text-[#1e3a5f]/80">
-                  <ul className="space-y-4 text-sm pl-4">
-                    <li className="flex justify-between items-center">
-                      <div className="flex items-center gap-3">
-                        <PlayCircle size={16} className="text-[#00b8d9]" /> 
-                        <span className="text-[#00b8d9] font-medium hover:underline cursor-pointer">Welcome to the Course</span>
+                {data.courseContent.sections.map((section, index) => (
+                  <div key={index}>
+                    <div className="bg-[#1e3a5f]/[0.03] border-b border-[#1e3a5f]/10 p-4 flex justify-between items-center cursor-pointer hover:bg-[#1e3a5f]/[0.06] transition-colors">
+                      <div className="flex items-center gap-3 font-bold text-lg text-[#1e3a5f]">
+                        <span>{section.title}</span>
                       </div>
-                      <span className="text-[#1e3a5f]/60">03:12</span>
-                    </li>
-                    <li className="flex justify-between items-center hover:bg-[#1e3a5f]/5 p-1 -mx-1 rounded">
-                      <div className="flex items-center gap-3">
-                        <PlayCircle size={16} className="text-[#1e3a5f]/40" /> 
-                        <span>Understanding the Modern Consumer</span>
+                      <span className="text-sm text-[#1e3a5f]/60">{section.lectures} lectures • {section.duration}</span>
+                    </div>
+                    {section.isExpanded && section.lectureItems && section.lectureItems.length > 0 && (
+                      <div className="bg-[#fff] p-4 text-[#1e3a5f]/80">
+                        <ul className="space-y-4 text-sm pl-4">
+                          {section.lectureItems.map((item, itemIndex) => (
+                            <li key={itemIndex} className="flex justify-between items-center hover:bg-[#1e3a5f]/5 p-1 -mx-1 rounded">
+                              <div className="flex items-center gap-3">
+                                {item.type === 'video' && (
+                                  <PlayCircle size={16} className={item.isPreview ? "text-[#00b8d9]" : "text-[#1e3a5f]/40"} />
+                                )}
+                                {item.type === 'article' && (
+                                  <FileText size={16} className="text-[#1e3a5f]/40" />
+                                )}
+                                {item.type === 'quiz' && (
+                                  <FileText size={16} className="text-[#1e3a5f]/40" />
+                                )}
+                                <span className={item.isPreview ? "text-[#00b8d9] font-medium hover:underline cursor-pointer" : ""}>
+                                  {item.title}
+                                </span>
+                              </div>
+                              <span className="text-[#1e3a5f]/60">{item.duration}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <span className="text-[#1e3a5f]/60">12:45</span>
-                    </li>
-                    <li className="flex justify-between items-center hover:bg-[#1e3a5f]/5 p-1 -mx-1 rounded">
-                      <div className="flex items-center gap-3">
-                        <FileText size={16} className="text-[#1e3a5f]/40" /> 
-                        <span>Worksheet: Goal Setting</span>
-                      </div>
-                      <span className="text-[#1e3a5f]/60">2 pages</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Accordion Item 2 */}
-                <div className="bg-[#1e3a5f]/[0.03] border-b border-[#1e3a5f]/10 p-4 flex justify-between items-center cursor-pointer hover:bg-[#1e3a5f]/[0.06] transition-colors">
-                  <div className="flex items-center gap-3 font-bold text-lg text-[#1e3a5f]">
-                    <span>M2: Advanced Branding Strategies</span>
+                    )}
                   </div>
-                  <span className="text-sm text-[#1e3a5f]/60">12 lectures • 2h 10m</span>
-                </div>
-                {/* Accordion Item 3 */}
-                <div className="bg-[#1e3a5f]/[0.03] p-4 flex justify-between items-center cursor-pointer hover:bg-[#1e3a5f]/[0.06] transition-colors">
-                  <div className="flex items-center gap-3 font-bold text-lg text-[#1e3a5f]">
-                    <span>M3: Social Media Domination</span>
-                  </div>
-                  <span className="text-sm text-[#1e3a5f]/60">18 lectures • 3h 45m</span>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -209,9 +305,12 @@ export default function CourseDetail() {
             <div>
               <h2 className="text-2xl font-extrabold mb-4 text-[#1e3a5f]">Requirements</h2>
               <ul className="pl-2 space-y-3 text-[#1e3a5f]/80">
-                <li className="flex gap-3 items-center"><div className="w-1.5 h-1.5 bg-[#00b8d9] rounded-full"></div>No prior marketing or business experience required.</li>
-                <li className="flex gap-3 items-center"><div className="w-1.5 h-1.5 bg-[#00b8d9] rounded-full"></div>A computer or smartphone with an internet connection.</li>
-                <li className="flex gap-3 items-center"><div className="w-1.5 h-1.5 bg-[#00b8d9] rounded-full"></div>A willingness to learn and apply the strategies discussed.</li>
+                {data.requirements.map((requirement, index) => (
+                  <li key={index} className="flex gap-3 items-center">
+                    <div className="w-1.5 h-1.5 bg-[#00b8d9] rounded-full"></div>
+                    {requirement}
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -219,16 +318,7 @@ export default function CourseDetail() {
             <div>
               <h2 className="text-2xl font-extrabold mb-4 text-[#1e3a5f]">Description</h2>
               <div className="text-[#1e3a5f]/80 space-y-4 leading-relaxed">
-                <p>Welcome to <strong className="text-[#1e3a5f]">Marketing Mastery</strong>, the most comprehensive and up-to-date marketing course on the internet.</p>
-                <p>Are you struggling to get eyes on your business? Do you feel like you have a great product but nobody knows about it? In this course, we will break down the exact strategies used by multi-million dollar corporations and apply them to your business.</p>
-                <p>We'll start with the absolute basics of consumer psychology and work our way up to advanced brand positioning and automated funnels.</p>
-                <p className="font-bold text-[#1e3a5f]">By the end of this course, you will be able to:</p>
-                <ul className="pl-2 space-y-2 mt-2">
-                  <li className="flex gap-3 items-start"><Check size={16} className="text-[#00b8d9] mt-1 shrink-0" />Create compelling brand messaging.</li>
-                  <li className="flex gap-3 items-start"><Check size={16} className="text-[#00b8d9] mt-1 shrink-0" />Run profitable ad campaigns.</li>
-                  <li className="flex gap-3 items-start"><Check size={16} className="text-[#00b8d9] mt-1 shrink-0" />Grow your social media presence organically.</li>
-                  <li className="flex gap-3 items-start"><Check size={16} className="text-[#00b8d9] mt-1 shrink-0" />Convert passive viewers into active buyers.</li>
-                </ul>
+                <p>{data.description}</p>
               </div>
             </div>
 
@@ -236,12 +326,18 @@ export default function CourseDetail() {
             <div className="lg:hidden border border-[#1e3a5f]/10 rounded-2xl p-6 bg-[#fff] shadow-sm">
               <h3 className="font-extrabold text-lg mb-4 text-[#1e3a5f] uppercase tracking-wider">This course includes:</h3>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 text-sm text-[#1e3a5f]/80">
-                <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> 22.5 hours on-demand video</li>
-                <li className="flex items-center gap-3"><FileText size={16} className="text-[#00b8d9]" /> 14 articles</li>
-                <li className="flex items-center gap-3"><Download size={16} className="text-[#00b8d9]" /> 84 downloadable resources</li>
-                <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> Access on mobile and TV</li>
-                <li className="flex items-center gap-3"><Infinity size={16} className="text-[#00b8d9]" /> Full lifetime access</li>
-                <li className="flex items-center gap-3"><Trophy size={16} className="text-[#00b8d9]" /> Certificate of completion</li>
+                <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> {data.courseIncludes.videoHours} hours on-demand video</li>
+                <li className="flex items-center gap-3"><FileText size={16} className="text-[#00b8d9]" /> {data.courseIncludes.articles} articles</li>
+                <li className="flex items-center gap-3"><Download size={16} className="text-[#00b8d9]" /> {data.courseIncludes.downloadableResources} downloadable resources</li>
+                {data.courseIncludes.accessOnDevices && (
+                  <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> Access on mobile and TV</li>
+                )}
+                {data.courseIncludes.lifetimeAccess && (
+                  <li className="flex items-center gap-3"><Infinity size={16} className="text-[#00b8d9]" /> Full lifetime access</li>
+                )}
+                {data.courseIncludes.certificate && (
+                  <li className="flex items-center gap-3"><Trophy size={16} className="text-[#00b8d9]" /> Certificate of completion</li>
+                )}
               </ul>
             </div>
 
@@ -253,7 +349,7 @@ export default function CourseDetail() {
               {/* Preview Image/Video */}
               <div className="relative group cursor-pointer border-b-[3px] border-[#00b8d9]">
                 <img 
-                  src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                  src={data.hero.previewImage} 
                   alt="Course Demo" 
                   className="w-full h-[220px] object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -270,11 +366,11 @@ export default function CourseDetail() {
               {/* Purchase Section */}
               <div className="px-6 pt-6 relative">
                 <div className="text-4xl font-extrabold text-[#1e3a5f] mb-1 tracking-tight flex items-end gap-3">
-                  ₹2,550
-                  <span className="text-[#1e3a5f]/40 font-medium text-lg line-through mb-1">₹8,999</span>
+                  {data.pricing.currentPrice}
+                  <span className="text-[#1e3a5f]/40 font-medium text-lg line-through mb-1">{data.pricing.originalPrice}</span>
                 </div>
                 <div className="text-[#00b8d9] font-bold text-sm mb-6 flex items-center gap-1.5">
-                  <AlertCircle size={14} /> 71% off! Offer ends in 2 days
+                  <AlertCircle size={14} /> {data.pricing.discountText}
                 </div>
 
                 <button className="w-full bg-[#1e3a5f] hover:bg-[#00b8d9] text-[#fff] font-bold py-3.5 px-4 rounded-xl mb-3 transition-colors duration-300 shadow-md flex items-center justify-center">
@@ -285,19 +381,25 @@ export default function CourseDetail() {
                 </button>
                 
                 <p className="text-center text-xs font-semibold text-[#1e3a5f]/50 mb-6 flex items-center justify-center gap-1">
-                  30-Day Money-Back Guarantee
+                  {data.pricing.guaranteeText}
                 </p>
 
                 {/* Course Includes */}
                 <div>
                   <h4 className="font-bold text-sm mb-4 text-[#1e3a5f] uppercase tracking-wider">This course includes:</h4>
                   <ul className="space-y-3.5 text-sm text-[#1e3a5f]/80">
-                    <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> 22.5 hours on-demand video</li>
-                    <li className="flex items-center gap-3"><FileText size={16} className="text-[#00b8d9]" /> 14 articles</li>
-                    <li className="flex items-center gap-3"><Download size={16} className="text-[#00b8d9]" /> 84 downloadable resources</li>
-                    <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> Access on mobile and TV</li>
-                    <li className="flex items-center gap-3"><Infinity size={16} className="text-[#00b8d9]" /> Full lifetime access</li>
-                    <li className="flex items-center gap-3"><Trophy size={16} className="text-[#00b8d9]" /> Certificate of completion</li>
+                    <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> {data.courseIncludes.videoHours} hours on-demand video</li>
+                    <li className="flex items-center gap-3"><FileText size={16} className="text-[#00b8d9]" /> {data.courseIncludes.articles} articles</li>
+                    <li className="flex items-center gap-3"><Download size={16} className="text-[#00b8d9]" /> {data.courseIncludes.downloadableResources} downloadable resources</li>
+                    {data.courseIncludes.accessOnDevices && (
+                      <li className="flex items-center gap-3"><Monitor size={16} className="text-[#00b8d9]" /> Access on mobile and TV</li>
+                    )}
+                    {data.courseIncludes.lifetimeAccess && (
+                      <li className="flex items-center gap-3"><Infinity size={16} className="text-[#00b8d9]" /> Full lifetime access</li>
+                    )}
+                    {data.courseIncludes.certificate && (
+                      <li className="flex items-center gap-3"><Trophy size={16} className="text-[#00b8d9]" /> Certificate of completion</li>
+                    )}
                   </ul>
                 </div>
 
@@ -316,8 +418,8 @@ export default function CourseDetail() {
       {/* ─── Mobile Sticky Bottom CTA ─── */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#fff] border-t border-[#1e3a5f]/10 p-4 flex justify-between items-center shadow-[0_-4px_16px_rgba(30,58,95,0.08)] z-50">
         <div>
-          <div className="text-2xl font-extrabold tracking-tight text-[#1e3a5f]">₹2,550</div>
-          <div className="text-[10px] uppercase font-bold tracking-wider text-[#00b8d9]">71% off</div>
+          <div className="text-2xl font-extrabold tracking-tight text-[#1e3a5f]">{data.pricing.currentPrice}</div>
+          <div className="text-[10px] uppercase font-bold tracking-wider text-[#00b8d9]">{data.pricing.discountText}</div>
         </div>
         <button className="bg-[#1e3a5f] text-[#fff] font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#00b8d9] transition-colors flex-shrink-0">
           Buy now

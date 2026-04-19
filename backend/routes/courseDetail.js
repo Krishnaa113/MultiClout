@@ -1,74 +1,32 @@
 const express = require('express');
-const { body } = require('express-validator');
 const router = express.Router();
-const auth = require('../middleware/auth');
+const CourseDetail = require('../models/CourseDetail');
 const adminAuth = require('../middleware/adminAuth');
-const {
-  getDashboardContent,
-  createDashboardContent,
-  updateDashboardContent,
-  deleteDashboardContent,
-  getAdminSettings,
-  updateAdminSettings,
-  getAllUsers,
-  updateUserRole
-} = require('../controllers/adminController');
+const { body, validationResult } = require('express-validator');
 
-// Dashboard Content Management
-router.get('/dashboard-content', auth, adminAuth, getDashboardContent);
-router.post('/dashboard-content', [
-  auth,
-  adminAuth,
-  body('title').notEmpty().withMessage('Title is required'),
-  body('description').notEmpty().withMessage('Description is required'),
-  body('icon').optional().isString().withMessage('Icon must be a string'),
-  body('order').optional().isNumeric().withMessage('Order must be a number'),
-  body('link').optional().isURL().withMessage('Link must be a valid URL')
-], createDashboardContent);
-router.put('/dashboard-content/:id', [
-  auth,
-  adminAuth,
-  body('title').optional().notEmpty().withMessage('Title cannot be empty'),
-  body('description').optional().notEmpty().withMessage('Description cannot be empty'),
-  body('icon').optional().isString().withMessage('Icon must be a string'),
-  body('order').optional().isNumeric().withMessage('Order must be a number'),
-  body('link').optional().isURL().withMessage('Link must be a valid URL'),
-  body('isActive').optional().isBoolean().withMessage('isActive must be a boolean')
-], updateDashboardContent);
-router.delete('/dashboard-content/:id', auth, adminAuth, deleteDashboardContent);
-
-// Admin Settings
-router.get('/settings', auth, adminAuth, getAdminSettings);
-router.put('/settings', [
-  auth,
-  adminAuth,
-  body('siteName').optional().notEmpty().withMessage('Site name cannot be empty'),
-  body('siteDescription').optional().notEmpty().withMessage('Site description cannot be empty'),
-  body('primaryColor').optional().isHexColor().withMessage('Primary color must be a valid hex color'),
-  body('secondaryColor').optional().isHexColor().withMessage('Secondary color must be a valid hex color'),
-  body('contactEmail').optional().isEmail().withMessage('Contact email must be valid'),
-  body('maintenanceMode').optional().isBoolean().withMessage('Maintenance mode must be a boolean')
-], updateAdminSettings);
-
-// User Management
-router.get('/users', auth, adminAuth, getAllUsers);
-router.put('/users/:id/role', [
-  auth,
-  adminAuth,
-  body('user_type').isIn(['user', 'admin']).withMessage('User type must be either user or admin')
-], updateUserRole);
-
-// Course Detail Management
-router.get('/course-details', auth, adminAuth, async (req, res) => {
+// Get course detail by training program ID (Public route)
+router.get('/:trainingProgramId', async (req, res) => {
   try {
-    const CourseDetail = require('../models/CourseDetail');
-    const courseDetails = await CourseDetail.find().sort({ order: 1, trainingProgramId: 1 });
+    const { trainingProgramId } = req.params;
+    
+    const courseDetail = await CourseDetail.findOne({ 
+      trainingProgramId: parseInt(trainingProgramId),
+      isActive: true 
+    });
+    
+    if (!courseDetail) {
+      return res.status(404).json({
+        success: false,
+        message: 'Course detail not found'
+      });
+    }
+    
     res.json({
       success: true,
-      data: courseDetails
+      data: courseDetail
     });
   } catch (error) {
-    console.error('Get course details error:', error);
+    console.error('Get course detail error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -76,8 +34,27 @@ router.get('/course-details', auth, adminAuth, async (req, res) => {
   }
 });
 
-router.post('/course-details', [
-  auth,
+// Get all course details (Admin only)
+router.get('/', adminAuth, async (req, res) => {
+  try {
+    const courseDetails = await CourseDetail.find()
+      .sort({ order: 1, trainingProgramId: 1 });
+    
+    res.json({
+      success: true,
+      data: courseDetails
+    });
+  } catch (error) {
+    console.error('Get all course details error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
+// Create new course detail (Admin only)
+router.post('/', [
   adminAuth,
   body('trainingProgramId').isInt({ min: 1 }).withMessage('Training program ID must be a positive integer'),
   body('programName').notEmpty().withMessage('Program name is required'),
@@ -91,7 +68,6 @@ router.post('/course-details', [
   body('description').notEmpty().withMessage('Description is required')
 ], async (req, res) => {
   try {
-    const CourseDetail = require('../models/CourseDetail');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -126,8 +102,8 @@ router.post('/course-details', [
   }
 });
 
-router.put('/course-details/:id', [
-  auth,
+// Update course detail (Admin only)
+router.put('/:id', [
   adminAuth,
   body('trainingProgramId').optional().isInt({ min: 1 }).withMessage('Training program ID must be a positive integer'),
   body('programName').optional().notEmpty().withMessage('Program name cannot be empty'),
@@ -143,7 +119,6 @@ router.put('/course-details/:id', [
   body('order').optional().isInt({ min: 0 }).withMessage('Order must be a non-negative integer')
 ], async (req, res) => {
   try {
-    const CourseDetail = require('../models/CourseDetail');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -189,9 +164,9 @@ router.put('/course-details/:id', [
   }
 });
 
-router.delete('/course-details/:id', auth, adminAuth, async (req, res) => {
+// Delete course detail (Admin only)
+router.delete('/:id', adminAuth, async (req, res) => {
   try {
-    const CourseDetail = require('../models/CourseDetail');
     const courseDetail = await CourseDetail.findByIdAndDelete(req.params.id);
     
     if (!courseDetail) {
@@ -214,9 +189,9 @@ router.delete('/course-details/:id', auth, adminAuth, async (req, res) => {
   }
 });
 
-router.post('/course-details/:id/duplicate', auth, adminAuth, async (req, res) => {
+// Duplicate course detail (Admin only)
+router.post('/:id/duplicate', adminAuth, async (req, res) => {
   try {
-    const CourseDetail = require('../models/CourseDetail');
     const originalCourse = await CourseDetail.findById(req.params.id);
     
     if (!originalCourse) {

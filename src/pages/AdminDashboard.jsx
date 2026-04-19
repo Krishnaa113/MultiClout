@@ -9,6 +9,8 @@ import SeekhoGurusEditor from '../components/SeekhoGurusEditor';
 import VideoGridEditor from '../components/VideoGridEditor';
 import FranchiseEditor from '../components/FranchiseEditor';
 import AboutEditor from '../components/AboutEditor';
+import CourseDetailEditor from '../components/CourseDetailEditor';
+import VideoEditor from '../components/VideoEditor';
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
@@ -115,6 +117,8 @@ const AdminDashboard = () => {
     { id: 'testimonials', name: 'Testimonials', icon: '💬' },
     { id: 'seekho_gurus', name: 'Seekho Gurus', icon: '👨‍🏫' },
     { id: 'video_grid', name: 'Video Grid', icon: '🎥' },
+    { id: 'video_management', name: 'Video Management', icon: '📹' },
+    { id: 'course_detail', name: 'Course Details', icon: '📚' },
     { id: 'franchise', name: 'Franchise', icon: '🏢' },
     { id: 'about', name: 'About Us', icon: '📄' }
   ];
@@ -245,6 +249,14 @@ const AdminDashboard = () => {
               onSave={(content) => saveContent('video_grid', content)}
               saving={saving}
             />
+          )}
+
+          {activeSection === 'course_detail' && (
+            <CourseDetailEditor />
+          )}
+
+          {activeSection === 'video_management' && (
+            <VideoEditor />
           )}
 
           {activeSection === 'franchise' && (

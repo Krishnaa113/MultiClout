@@ -37,6 +37,8 @@ mongoose.connect(process.env.MONGO_URI, {
 const User = require('./models/User');
 const DashboardContent = require('./models/DashboardContent');
 const HomePageContent = require('./models/HomePageContent');
+const CourseDetail = require('./models/CourseDetail');
+const Video = require('./models/Video');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -383,6 +385,14 @@ app.use('/api/admin', adminRoutes);
 // Import home page content routes
 const homePageContentRoutes = require('./routes/homePageContent');
 app.use('/api/home-content', homePageContentRoutes);
+
+// Import course detail routes
+const courseDetailRoutes = require('./routes/courseDetail');
+app.use('/api/course-detail', courseDetailRoutes);
+
+// Import video routes
+const videoRoutes = require('./routes/video');
+app.use('/api/videos', videoRoutes);
 
 // --- SERVE FRONTEND ---
 // Serve static files from the Vite build directory

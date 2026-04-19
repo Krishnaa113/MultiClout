@@ -27,7 +27,7 @@ const AdminLogin = () => {
       if (response.ok) {
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('user', JSON.stringify(data.data.user));
-        navigate('/admin/home-content');
+        navigate('/admin/dashboard');
       } else {
         setError(data.message || 'Login failed');
       }
